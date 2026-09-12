@@ -1,0 +1,30 @@
+﻿@model IEnumerable<WebApplication1.ViewModels.UserWithRolesViewModel>
+<h2>All users with their Role</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>
+                    @if (user.Roles.Any())
+                    {
+                        @string.Join(", ", user.Roles)
+                    }
+                    else
+                    {
+                        <span class="text-muted">No Roles Assigned</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

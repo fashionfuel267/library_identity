@@ -1,0 +1,20 @@
+﻿<div class="row">
+    <form asp-action="AssignRole" asp-controller="ManageUsers" method="post">
+    <div class="col-md-6">
+        <label>User Email</label>
+            <select id="useremail" name="useremail" asp-items="@ViewBag.userEmail" class="form-control">
+            <option value="">Select User</option>
+            
+        </select>
+        
+    </div>
+    <div class="col-md-6">
+            <select asp-items="@ViewBag.roles" class="form-control" name="role">
+        <option value="">Select Role</option>
+         
+    </select>
+        
+    </div>
+    <button type="submit"    class="btn btn-primary">Assign</button>
+    </form>
+</div>
