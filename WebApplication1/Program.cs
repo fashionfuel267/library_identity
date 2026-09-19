@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Net;
 using WebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,23 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Set your custom login URL path here
+    options.LoginPath = "/Accounts/Login";
+    options.LogoutPath = "/Accounts/Logout";
+    options.AccessDeniedPath = "/Accounts/AccessDenied";
+});
+ 
+builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        // Define your login page route here
+        options.LoginPath = "/Accounts/Login";
 
+// Optional: Define the path if they lack rights to a specific page
+options.AccessDeniedPath = "/Accounts/AccessDenied"; 
+    });
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDBContext>();
 builder.Services.AddControllersWithViews();

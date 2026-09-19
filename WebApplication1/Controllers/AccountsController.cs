@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class AccountsController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -15,10 +17,12 @@ namespace WebApplication1.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM login)
         {
@@ -58,6 +62,27 @@ namespace WebApplication1.Controllers
                 }
             }
             return View(login);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Logout(string? returnUrl = null)
+        {
+            await _signInManager.SignOutAsync();
+          
+            if (returnUrl != null)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                
+                return RedirectToAction("Index", "Home");
+            }
+
+            
+        }
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
